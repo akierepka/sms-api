@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Helpers\SMSHelper;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class SMSController extends BaseController
@@ -11,6 +12,7 @@ class SMSController extends BaseController
     {
         $data= file_get_contents('php://input');
         $json  = null;
+        $smsHelper = new SMSHelper();
         if($data != null ){
             $json  = json_decode($data);
         }
@@ -18,7 +20,7 @@ class SMSController extends BaseController
             $token = $this->request->header('Authorization');
             if($token->getValue() == "123"){
                     if(isset($json->phone) && isset($json->message)){
-
+                        $smsHelper->sendSMS($json->phone,$json->message);
                         return json_encode(['message' => 'wiadmosc wysłana']);
                     }
                     else{
